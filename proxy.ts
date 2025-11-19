@@ -21,7 +21,7 @@ export async function proxy(req: NextRequest) {
   }
   // 🟦 PRODUCTION — remove base domain (e.g., kiam.shariarkobirkiam.xyz)
   if (process.env.NODE_ENV === 'production') {
-    const base = process.env.BASE_DOMAIN; // e.g. "shariarkobirkiam.xyz"
+    const base = process.env.NEXT_PUBLIC_MAIN_DOMAIN; // e.g. "shariarkobirkiam.xyz"
     currentHost = hostname.replace(`.${base}`, '');
     // kiam
   }
@@ -29,7 +29,7 @@ export async function proxy(req: NextRequest) {
   // If opening root domain (shariarkobirkiam.xyz) → do nothing
   if (
     !currentHost ||
-    currentHost === process.env.BASE_DOMAIN
+    currentHost === process.env.NEXT_PUBLIC_MAIN_DOMAIN
   ) {
     return NextResponse.next();
   }
