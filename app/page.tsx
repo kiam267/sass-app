@@ -10,17 +10,8 @@ export default function LandingPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [host, setHost] = useState('');
   const router = useRouter();
-  console.log(
-    usePathname(),
-    'usePathname',
-    window.location.host
-  );
-  useEffect(() => {
-    // Safe hostname fetch
-    if (typeof window !== 'undefined') {
-      setHost(window.location.host);
-    }
-  });
+
+  
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -42,7 +33,13 @@ export default function LandingPage() {
                   variant="outline"
                   onClick={() =>
                     router.push(
-                      `http://kiam.${host}/dashboard`
+                      `https://kiam.${
+                        process.env.NODE_ENV ===
+                        'production'
+                          ? process.env
+                              .NEXT_PUBLIC_MAIN_DOMAIN
+                          : 'localhost:3000'
+                      }/dashboard`
                     )
                   }
                 >
@@ -89,7 +86,14 @@ export default function LandingPage() {
               <Button
                 size="lg"
                 onClick={() =>
-                  router.push(`http:kiam.${host}/dashboard`)
+                  router.push(
+                    `https://kiam.${
+                      process.env.NODE_ENV === 'production'
+                        ? process.env
+                            .NEXT_PUBLIC_MAIN_DOMAIN
+                        : 'localhost:3000'
+                    }/dashboard`
+                  )
                 }
               >
                 Go to Dashboard
