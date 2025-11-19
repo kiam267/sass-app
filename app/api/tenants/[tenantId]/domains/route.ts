@@ -1,4 +1,4 @@
-import { getDb, schema } from '@/lib/db';
+import { db, schema } from '@/lib/db';
 import { verifyToken } from '@/lib/auth/jwt';
 import { NextRequest, NextResponse } from 'next/server';
 import { eq, and } from 'drizzle-orm';
@@ -25,7 +25,7 @@ export async function GET(
     }
 
     const { tenantId } = await params;
-    const db = getDb();
+
 
     // Verify tenant ownership
     const [tenant] = await db
@@ -94,7 +94,7 @@ export async function POST(
       );
     }
 
-    const db = getDb();
+  
 
     // Verify tenant ownership
     const [tenant] = await db

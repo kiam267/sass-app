@@ -1,4 +1,4 @@
-import { getDb, schema } from '@/lib/db';
+import { db, schema } from '@/lib/db';
 import { verifyToken } from '@/lib/auth/jwt';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -37,7 +37,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const db = getDb();
 
     // Create tenant
     const [tenant] = await db

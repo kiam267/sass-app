@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDb } from '@/lib/db/index'; // your drizzle client
+import { db } from '@/lib/db/index'; // your drizzle client
 import { tenants, customDomains } from '@/lib/db/schema';
 import { eq, or } from 'drizzle-orm';
 
@@ -9,7 +9,7 @@ export async function proxy(req: NextRequest) {
 
   const hostname = req.headers.get('host') || '';
   // kiam.localhost:3000
-  const db = getDb();
+
   console.log(hostname, 'hostname', pathname);
 
   let currentHost: string | null = hostname;

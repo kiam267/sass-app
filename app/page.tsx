@@ -5,13 +5,12 @@ import { useRouter, usePathname } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import DomainSetup from '@/components/domain-setup';
 
 export default function LandingPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [host, setHost] = useState('');
   const router = useRouter();
-
-  
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -19,7 +18,7 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-background/95">
+    <div className="min-h-screen  from-background to-background/95">
       {/* Header */}
       <header className="border-b border-border/40 backdrop-blur-sm">
         <nav className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
@@ -68,7 +67,7 @@ export default function LandingPage() {
           </div>
         </nav>
       </header>
-
+      <DomainSetup />
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-6 py-24">
         <div className="text-center space-y-8">

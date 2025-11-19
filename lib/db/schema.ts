@@ -1,5 +1,5 @@
 import { pgTable, text, timestamp, uuid, serial, boolean, index } from 'drizzle-orm/pg-core';
-import { relations } from 'drizzle-orm';
+import { InferSelectModel, relations } from 'drizzle-orm';
 
 // Users table
 export const users = pgTable(
@@ -34,6 +34,8 @@ export const tenants = pgTable(
     slugIdx: index('slug_idx').on(table.slug),
   })
 );
+export type User = InferSelectModel<typeof users>;
+export type Tenant = InferSelectModel<typeof tenants>;
 
 // Custom domains table
 export const customDomains = pgTable(

@@ -1,4 +1,4 @@
-import { getDb, schema } from '@/lib/db';
+import { db, schema } from '@/lib/db';
 import { verifyToken } from '@/lib/auth/jwt';
 import { NextRequest, NextResponse } from 'next/server';
 import { eq } from 'drizzle-orm';
@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const db = getDb();
+
     const userTenants = await db
       .select()
       .from(schema.tenants)

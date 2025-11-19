@@ -1,3 +1,4 @@
+import UserProfile from '@/components/user-profile';
 import React from 'react';
 
 async function page({
@@ -6,7 +7,7 @@ async function page({
   params: { domain: string };
 }) {
   const { domain } = await params;
-  return <div>page - {domain}</div>;
+  return <UserProfile domain={domain} />;
 }
 
 export default page;

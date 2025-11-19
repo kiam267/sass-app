@@ -1,4 +1,4 @@
-import { getDb, schema } from '@/lib/db';
+import { db, schema } from '@/lib/db';
 import { hashPassword } from '@/lib/auth/bcrypt';
 import { generateToken } from '@/lib/auth/jwt';
 import { NextRequest, NextResponse } from 'next/server';
@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const db = getDb();
+
 
     // Check if user exists
     const [existingUser] = await db

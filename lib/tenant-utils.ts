@@ -1,4 +1,4 @@
-import { getDb, schema } from './db';
+import { db, schema } from './db';
 import { eq } from 'drizzle-orm';
 
 export const MAIN_DOMAIN = process.env.NEXT_PUBLIC_MAIN_DOMAIN || 'shariarkobirkiam.xyz';
@@ -31,7 +31,6 @@ export function getTenantSlugFromHost(host: string): string | null {
  * Find tenant by slug or custom domain
  */
 export async function getTenantByHost(host: string) {
-  const db = getDb();
   const hostname = host.split(':')[0];
 
   // Check if it's a subdomain
