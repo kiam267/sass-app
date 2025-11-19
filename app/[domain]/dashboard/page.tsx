@@ -3,7 +3,13 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { CreateTenantForm } from '@/components/tenant/create-tenant-form';
 import { Loader2 } from 'lucide-react';
 
@@ -30,9 +36,12 @@ export default function DashboardPage() {
         }
 
         // Fetch user's tenants
-        const res = await fetch('/api/tenants', {
-          headers: { 'Authorization': `Bearer ${token}` },
-        });
+        const res = await fetch(
+          'http://localhost:3000/api/tenants',
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
         if (!res.ok) {
           if (res.status === 401) {
@@ -65,8 +74,12 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-background">
       <div className="max-w-6xl mx-auto p-6">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">My Dashboards</h1>
-          <Button onClick={() => setShowCreate(!showCreate)}>
+          <h1 className="text-3xl font-bold">
+            My Dashboards
+          </h1>
+          <Button
+            onClick={() => setShowCreate(!showCreate)}
+          >
             {showCreate ? 'Cancel' : 'Create Dashboard'}
           </Button>
         </div>
@@ -80,7 +93,9 @@ export default function DashboardPage() {
         {tenants.length === 0 ? (
           <Card>
             <CardContent className="pt-12 pb-12 text-center">
-              <p className="text-muted-foreground mb-4">No dashboards yet</p>
+              <p className="text-muted-foreground mb-4">
+                No dashboards yet
+              </p>
               <Button onClick={() => setShowCreate(true)}>
                 Create Your First Dashboard
               </Button>
@@ -88,21 +103,26 @@ export default function DashboardPage() {
           </Card>
         ) : (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {tenants.map((tenant) => (
+            {tenants.map(tenant => (
               <Card
                 key={tenant.id}
                 className="cursor-pointer hover:shadow-lg transition-shadow"
-                onClick={() => router.push(`/dashboard/${tenant.id}`)}
+                onClick={() =>
+                  router.push(`/dashboard/${tenant.id}`)
+                }
               >
                 <CardHeader>
                   <CardTitle>{tenant.name}</CardTitle>
                   <CardDescription>
-                    https://{tenant.slug}.shariarkobirkiam.xyz
+                    https://{tenant.slug}
+                    .shariarkobirkiam.xyz
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   {tenant.description && (
-                    <p className="text-sm text-muted-foreground">{tenant.description}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {tenant.description}
+                    </p>
                   )}
                 </CardContent>
               </Card>

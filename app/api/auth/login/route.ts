@@ -4,14 +4,38 @@ import { generateToken } from '@/lib/auth/jwt';
 import { NextRequest, NextResponse } from 'next/server';
 import { eq } from 'drizzle-orm';
 
+// CORS helper for Next.js route handler
+function handleCors(res: NextResponse) {
+  res.headers.set('Access-Control-Allow-Origin', '*'); // or your frontend domain
+  res.headers.set(
+    'Access-Control-Allow-Methods',
+    'POST, OPTIONS'
+  );
+  res.headers.set(
+    'Access-Control-Allow-Headers',
+    'Content-Type, Authorization'
+  );
+  return res;
+}
+
 export async function POST(req: NextRequest) {
   try {
+    // Handle preflight OPTIONS request
+    if (req.method === 'OPTIONS') {
+      return handleCors(
+        NextResponse.json({}, { status: 204 })
+      );
+    }
+
     const { email, password } = await req.json();
+    console.log(email, password, 'login');
 
     if (!email || !password) {
-      return NextResponse.json(
-        { error: 'Missing email or password' },
-        { status: 400 }
+      return handleCors(
+        NextResponse.json(
+          { error: 'Missing email or password' },
+          { status: 400 }
+        )
       );
     }
 
@@ -24,37 +48,53 @@ export async function POST(req: NextRequest) {
       .where(eq(schema.users.email, email));
 
     if (!user) {
-      return NextResponse.json(
-        { error: 'Invalid credentials' },
-        { status: 401 }
+      return handleCors(
+        NextResponse.json(
+          { error: 'Invalid credentials' },
+          { status: 401 }
+        )
       );
     }
 
     // Verify password
-    const isValid = await verifyPassword(password, user.password);
+    const isValid = await verifyPassword(
+      password,
+      user.password
+    );
     if (!isValid) {
-      return NextResponse.json(
-        { error: 'Invalid credentials' },
-        { status: 401 }
+      return handleCors(
+        NextResponse.json(
+          { error: 'Invalid credentials' },
+          { status: 401 }
+        )
       );
     }
 
-    // Generate token
+    // Generate JWT token
     const token = generateToken(user.id);
 
-    return NextResponse.json({
-      token,
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-      },
-    });
+    return handleCors(
+      NextResponse.json({
+        token,
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+        },
+      })
+    );
   } catch (error) {
     console.error('[Login Error]', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
+    return handleCors(
+      NextResponse.json(
+        { error: 'Internal server error' },
+        { status: 500 }
+      )
     );
   }
+}
+
+// Optional: handle preflight requests for OPTIONS
+export async function OPTIONS(req: NextRequest) {
+  return handleCors(NextResponse.json({}, { status: 204 }));
 }

@@ -3,7 +3,13 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Link from 'next/link';
@@ -13,7 +19,9 @@ export function SignupForm() {
   const [error, setError] = useState('');
   const router = useRouter();
 
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(
+    e: React.FormEvent<HTMLFormElement>
+  ) {
     e.preventDefault();
     setLoading(true);
     setError('');
@@ -24,11 +32,14 @@ export function SignupForm() {
     const password = formData.get('password') as string;
 
     try {
-      const res = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password }),
-      });
+      const res = await fetch(
+        'http://localhost:3000/api/auth/login',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password }),
+        }
+      );
 
       const data = await res.json();
 
@@ -51,7 +62,9 @@ export function SignupForm() {
     <Card className="w-full max-w-md">
       <CardHeader>
         <CardTitle>Create Account</CardTitle>
-        <CardDescription>Join our SaaS platform</CardDescription>
+        <CardDescription>
+          Join our SaaS platform
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={onSubmit} className="space-y-4">
@@ -60,7 +73,7 @@ export function SignupForm() {
               {error}
             </div>
           )}
-          
+
           <div className="space-y-2">
             <Label htmlFor="name">Full Name</Label>
             <Input
@@ -93,14 +106,21 @@ export function SignupForm() {
             />
           </div>
 
-          <Button type="submit" className="w-full" disabled={loading}>
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={loading}
+          >
             {loading ? 'Creating account...' : 'Sign Up'}
           </Button>
         </form>
 
         <p className="text-sm text-center mt-4">
           Already have an account?{' '}
-          <Link href="/login" className="text-blue-600 hover:underline">
+          <Link
+            href="/auth/login"
+            className="text-blue-600 hover:underline"
+          >
             Login
           </Link>
         </p>

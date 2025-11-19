@@ -3,7 +3,13 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Link from 'next/link';
@@ -13,7 +19,9 @@ export function LoginForm() {
   const [error, setError] = useState('');
   const router = useRouter();
 
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(
+    e: React.FormEvent<HTMLFormElement>
+  ) {
     e.preventDefault();
     setLoading(true);
     setError('');
@@ -23,11 +31,14 @@ export function LoginForm() {
     const password = formData.get('password') as string;
 
     try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
+      const res = await fetch(
+        'http://localhost:3000/api/auth/login',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        }
+      );
 
       const data = await res.json();
 
@@ -49,7 +60,9 @@ export function LoginForm() {
     <Card className="w-full max-w-md">
       <CardHeader>
         <CardTitle>Welcome Back</CardTitle>
-        <CardDescription>Login to your account</CardDescription>
+        <CardDescription>
+          Login to your account
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={onSubmit} className="space-y-4">
@@ -81,14 +94,21 @@ export function LoginForm() {
             />
           </div>
 
-          <Button type="submit" className="w-full" disabled={loading}>
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={loading}
+          >
             {loading ? 'Logging in...' : 'Login'}
           </Button>
         </form>
 
         <p className="text-sm text-center mt-4">
           Don't have an account?{' '}
-          <Link href="/signup" className="text-blue-600 hover:underline">
+          <Link
+            href="/auth/signup"
+            className="text-blue-600 hover:underline"
+          >
             Sign Up
           </Link>
         </p>

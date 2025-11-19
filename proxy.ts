@@ -1,37 +1,77 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getTenantByHost } from './lib/tenant-utils';
+import { getDb } from '@/lib/db/index'; // your drizzle client
+import { tenants, customDomains } from '@/lib/db/schema';
+import { eq, or } from 'drizzle-orm';
 
 export async function proxy(req: NextRequest) {
-  const { pathname, hostname } = req.nextUrl;
+  const url = req.nextUrl;
+  const pathname = url.pathname;
 
-  // Allow auth routes
-  if (pathname.startsWith('/auth')) {
-    return NextResponse.next();
+  const hostname = req.headers.get('host') || '';
+  // kiam.localhost:3000
+  const db = getDb();
+  console.log(hostname, 'hostname', pathname);
+
+  let currentHost: string | null = hostname;
+
+  // 🟦 DEVELOPMENT — subdomain.localhost:3000
+  if (process.env.NODE_ENV === 'development') {
+    currentHost = hostname.replace('.localhost:3000', '');
+    // kiam
+  }
+  // 🟦 PRODUCTION — remove base domain (e.g., kiam.shariarkobirkiam.xyz)
+  if (process.env.NODE_ENV === 'production') {
+    const base = process.env.BASE_DOMAIN; // e.g. "shariarkobirkiam.xyz"
+    currentHost = hostname.replace(`.${base}`, '');
+    // kiam
   }
 
-  // Allow public routes
+  // If opening root domain (shariarkobirkiam.xyz) → do nothing
   if (
-    pathname === '/' ||
-    pathname.startsWith('/api/auth')
+    !currentHost ||
+    currentHost === process.env.BASE_DOMAIN
   ) {
     return NextResponse.next();
   }
 
-  // For dashboard routes, check if accessing via subdomain/custom domain
-  if (pathname.startsWith('/dashboard')) {
-    const tenant = await getTenantByHost(hostname);
+  // 🟦 1. Try Matching Custom Domain
+  const customDomain = await db
+    .select({
+      tenantId: customDomains.tenantId,
+      domain: customDomains.domain,
+    })
+    .from(customDomains)
+    .where(eq(customDomains.domain, hostname))
+    .limit(1);
+  if (customDomain.length > 0) {
+    const siteId = customDomain[0].tenantId;
 
-    if (tenant && pathname === '/dashboard') {
-      // Redirect to tenant-specific dashboard
-      return NextResponse.redirect(
-        new URL(`/dashboard/${tenant.id}`, req.url)
-      );
-    }
+    return NextResponse.rewrite(
+      new URL(`/${siteId}${pathname}`, req.url)
+    );
   }
 
+  // 🟦 2. Try Matching Tenant Subdomain (slug)
+  const tenant = await db
+    .select({
+      tenantId: tenants.id,
+      slug: tenants.slug,
+    })
+    .from(tenants)
+    .where(eq(tenants.slug, currentHost))
+    .limit(1);
+
+  if (tenant.length > 0) {
+    const siteId = tenant[0].tenantId;
+    return NextResponse.rewrite(
+      new URL(`/${siteId}${pathname}`, req.url)
+    );
+  }
+
+  // 🟥 No matching tenant → let root website load
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/((?!_next|public|static).*)'],
+  matcher: ['/((?!_next|public|static|favicon.ico).*)'],
 };
