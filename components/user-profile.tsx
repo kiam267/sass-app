@@ -52,7 +52,6 @@ export default function UserProfile({
 
     setUser(user);
   };
-  console.log(user);
 
   if (user === undefined) {
     return <div>No data founded</div>;
