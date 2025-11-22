@@ -51,7 +51,7 @@ Neon.
 │   └── [tenantId]/           # Tenant-specific pages
 │       ├── settings/         # Tenant settings
 │       └── api/              # API routes
-│
+│       
 ├── auth/                     # Auth endpoints
 ├── tenants/                  # Tenant management
 │
