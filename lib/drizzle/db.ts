@@ -4,7 +4,7 @@ import { drizzle } from 'drizzle-orm/neon-http';
 import { neon } from '@neondatabase/serverless';
 
 // Singleton pattern for Drizzle client
-if (!process.env.NEXT_PUBLIC_DATABASE_URL) {
+if (!process.env.DATABASE_URL) {
   throw new Error('DATABASE_URL is not set');
 }
 
