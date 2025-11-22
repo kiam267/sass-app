@@ -1,4 +1,4 @@
-import { db, schema } from '@/lib/db';
+import { db, schema } from '@/lib/drizzle/db';
 import { verifyPassword } from '@/lib/auth/bcrypt';
 import { generateToken } from '@/lib/auth/jwt';
 import { NextRequest, NextResponse } from 'next/server';
@@ -38,7 +38,6 @@ export async function POST(req: NextRequest) {
         )
       );
     }
-
 
     // Find user
     const [user] = await db

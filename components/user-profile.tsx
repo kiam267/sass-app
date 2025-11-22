@@ -6,8 +6,12 @@ import {
   AvatarFallback,
 } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
-import { db } from '@/lib/db';
-import { users, tenants, Tenant } from '@/lib/db/schema';
+import { db } from '@/lib/drizzle/db';
+import {
+  users,
+  tenants,
+  Tenant,
+} from '@/lib/drizzle/schema';
 import { eq } from 'drizzle-orm';
 import { Mail, Calendar, User } from 'lucide-react';
 import { useEffect, useState } from 'react';

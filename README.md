@@ -56,7 +56,7 @@ Neon.
 ├── tenants/                  # Tenant management
 │
 ├── lib/
-│   ├── db/                   # Database config & schema
+│   ├── drizzle/              # Database config & schema
 │   └── auth/                 # Auth utilities
 │
 ├── tenant-utils.ts           # Tenant detection logic

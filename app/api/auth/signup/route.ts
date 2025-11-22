@@ -1,9 +1,9 @@
-import { db, schema } from '@/lib/db';
+import { db, schema } from '@/lib/drizzle/db';
 import { hashPassword } from '@/lib/auth/bcrypt';
 import { generateToken } from '@/lib/auth/jwt';
 import { NextRequest, NextResponse } from 'next/server';
 import { eq } from 'drizzle-orm';
-import { users } from '@/lib/db/schema';
+import { users } from '@/lib/drizzle/schema';
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,8 +15,6 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-
-
 
     // Check if user exists
     const [existingUser] = await db

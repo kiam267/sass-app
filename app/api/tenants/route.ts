@@ -1,11 +1,13 @@
-import { db, schema } from '@/lib/db';
+import { db, schema } from '@/lib/drizzle/db';
 import { verifyToken } from '@/lib/auth/jwt';
 import { NextRequest, NextResponse } from 'next/server';
 import { eq } from 'drizzle-orm';
 
 export async function GET(req: NextRequest) {
   try {
-    const token = req.headers.get('authorization')?.replace('Bearer ', '');
+    const token = req.headers
+      .get('authorization')
+      ?.replace('Bearer ', '');
     if (!token) {
       return NextResponse.json(
         { error: 'Unauthorized' },
@@ -20,7 +22,6 @@ export async function GET(req: NextRequest) {
         { status: 401 }
       );
     }
-
 
     const userTenants = await db
       .select()

@@ -1,4 +1,4 @@
-import { db, schema } from '@/lib/db';
+import { db, schema } from '@/lib/drizzle/db';
 import { verifyToken } from '@/lib/auth/jwt';
 import { NextRequest, NextResponse } from 'next/server';
 import { eq, and } from 'drizzle-orm';
@@ -8,7 +8,9 @@ export async function GET(
   { params }: { params: Promise<{ tenantId: string }> }
 ) {
   try {
-    const token = req.headers.get('authorization')?.replace('Bearer ', '');
+    const token = req.headers
+      .get('authorization')
+      ?.replace('Bearer ', '');
     if (!token) {
       return NextResponse.json(
         { error: 'Unauthorized' },
@@ -25,7 +27,6 @@ export async function GET(
     }
 
     const { tenantId } = await params;
-
 
     // Verify tenant ownership
     const [tenant] = await db
@@ -68,7 +69,9 @@ export async function POST(
   { params }: { params: Promise<{ tenantId: string }> }
 ) {
   try {
-    const token = req.headers.get('authorization')?.replace('Bearer ', '');
+    const token = req.headers
+      .get('authorization')
+      ?.replace('Bearer ', '');
     if (!token) {
       return NextResponse.json(
         { error: 'Unauthorized' },
@@ -94,8 +97,6 @@ export async function POST(
       );
     }
 
-  
-
     // Verify tenant ownership
     const [tenant] = await db
       .select()
@@ -116,7 +117,10 @@ export async function POST(
 
     // Generate CNAME (in real world, you'd use a service like Vercel's API)
     // For now, we'll use a simple format
-    const cname = `${tenant.slug}-${tenantId.slice(0, 8)}.cname.vercel.sh`;
+    const cname = `${tenant.slug}-${tenantId.slice(
+      0,
+      8
+    )}.cname.vercel.sh`;
 
     // Create custom domain
     const [customDomain] = await db
@@ -132,7 +136,7 @@ export async function POST(
     return NextResponse.json(customDomain, { status: 201 });
   } catch (error: any) {
     console.error('[Add Domain Error]', error);
-    
+
     if (error.code === '23505') {
       return NextResponse.json(
         { error: 'Domain already exists' },

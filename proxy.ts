@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db/index'; // your drizzle client
-import { tenants, customDomains } from '@/lib/db/schema';
+import { db } from '@/lib/drizzle/db'; // your drizzle client
+import {
+  tenants,
+  customDomains,
+} from '@/lib/drizzle/schema';
 import { eq, or } from 'drizzle-orm';
 
 export async function proxy(req: NextRequest) {

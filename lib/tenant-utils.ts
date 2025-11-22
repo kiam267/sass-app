@@ -1,7 +1,9 @@
-import { db, schema } from './db';
+import { db, schema } from './drizzle/db';
 import { eq } from 'drizzle-orm';
 
-export const MAIN_DOMAIN = process.env.NEXT_PUBLIC_MAIN_DOMAIN || 'shariarkobirkiam.xyz';
+export const MAIN_DOMAIN =
+  process.env.NEXT_PUBLIC_MAIN_DOMAIN ||
+  'shariarkobirkiam.xyz';
 
 /**
  * Extract tenant slug from hostname
@@ -10,11 +12,16 @@ export const MAIN_DOMAIN = process.env.NEXT_PUBLIC_MAIN_DOMAIN || 'shariarkobirk
  * - shariarkobirkiam.xyz -> null (main app)
  * - alif.com -> null (custom domain, handle separately)
  */
-export function getTenantSlugFromHost(host: string): string | null {
+export function getTenantSlugFromHost(
+  host: string
+): string | null {
   // Remove port if exists
   const hostname = host.split(':')[0];
-  
-  if (hostname === MAIN_DOMAIN || hostname === `www.${MAIN_DOMAIN}`) {
+
+  if (
+    hostname === MAIN_DOMAIN ||
+    hostname === `www.${MAIN_DOMAIN}`
+  ) {
     return null;
   }
 
